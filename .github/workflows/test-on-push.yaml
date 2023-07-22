@@ -18,7 +18,7 @@ jobs:
               run: npm run test
     deploy:
         needs: test
-        runs-on: ubuntu-lastest
+        runs-on: ubuntu-latest
         steps:
             - name: Fetch the repository
               uses: actions/checkout@v3
