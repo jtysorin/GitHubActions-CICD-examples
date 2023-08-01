@@ -19,5 +19,5 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.version }}
-            - run: nmp ci
+            - run: npm ci
             - run: npm run build
