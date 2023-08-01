@@ -8,4 +8,4 @@ jobs:
     echo-output:
         runs-on: ubuntu-latest
         steps:
-            - run: echo DONE
+            - run: echo FINISHED
