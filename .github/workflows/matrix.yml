@@ -4,6 +4,7 @@ jobs:
     build:
         continue-on-error: true
         strategy:
+            fail-fast: true
             matrix:
                 version: [12, 14, 16]
                 os: [ubuntu-latest, windows-latest]
