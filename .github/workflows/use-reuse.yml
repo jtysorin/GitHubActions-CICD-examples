@@ -72,6 +72,8 @@ jobs:
       uses: ./.github/workflows/reusable.yml
       with:
         artifact-name: dist-files
+      secrets:
+        some-secret: MY_SECRET
 
     report:
       if: failure()

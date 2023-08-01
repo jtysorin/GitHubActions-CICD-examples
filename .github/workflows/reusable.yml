@@ -7,6 +7,11 @@ on:
                 required: true
                 default: dist
                 type: string
+        secrets:
+            some-secret:
+                description: Some description
+                required: true
+
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -15,4 +20,4 @@ jobs:
               with:
                 name: ${{ inputs.artifact-name }}
             - run: ls
-            - run: echo "Deploying & uploading..."
+            - run: "echo \"Deploying & uploading with secret: ${{ secrets.some-secret }}...\""
