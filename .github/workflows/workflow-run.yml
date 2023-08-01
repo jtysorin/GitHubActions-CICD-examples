@@ -5,7 +5,13 @@ on:
         types: [completed]
         branches: [master]
 jobs:
-    echo-output:
+    on-success:
         runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         steps:
-            - run: echo FINISHED
+            - run: echo 'The triggering workflow passed'
+    on-failure:
+        runs-on: ubuntu-latest
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        steps:
+            - run: echo 'The triggering workflow failed'
