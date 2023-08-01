@@ -28,4 +28,4 @@ jobs:
             - run: ls
             - run: "echo \"Deploying & uploading with secret: ${{ secrets.some-secret }}...\""
             - id: set-output-result
-              run: echo "step-output=success" >> $HITHUB_OUTPUT
+              run: echo "step-output=success" >> $GITHUB_OUTPUT
