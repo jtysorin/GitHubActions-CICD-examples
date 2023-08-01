@@ -11,9 +11,15 @@ on:
             some-secret:
                 description: Some description
                 required: true
+        outputs:
+            result:
+                description: Description of the otuput
+                value: ${{ jobs.deploy.outputs.output-result }}
 
 jobs:
     deploy:
+        outputs:
+            output-result: ${{ steps.set-output-result.outputs.step-output }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/download-artifact@v3
@@ -21,3 +27,5 @@ jobs:
                 name: ${{ inputs.artifact-name }}
             - run: ls
             - run: "echo \"Deploying & uploading with secret: ${{ secrets.some-secret }}...\""
+            - id: set-output-result
+              run: echo "step-output=success" >> $HITHUB_OUTPUT

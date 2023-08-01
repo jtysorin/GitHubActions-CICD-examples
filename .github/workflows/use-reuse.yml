@@ -75,6 +75,12 @@ jobs:
       secrets:
         some-secret: MY_SECRET
 
+    print-deploy-result:
+        needs: deploy
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo ${{ needs.deploy.outputs.result }}
+
     report:
       if: failure()
       needs: [lint, deploy]
