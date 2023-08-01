@@ -1,0 +1,23 @@
+name: Matrix Demo
+on: workflow_dispatch
+jobs:
+    build:
+        continue-on-error: true
+        strategy:
+            matrix:
+                version: [12, 14, 16]
+                os: [ubuntu-latest, windows-latest]
+                include:
+                    - version: 18
+                      os: ubuntu-latest
+                exclude:
+                    - version: 12
+                      os: windows-latest
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                node-version: ${{ matrix.version }}
+            - run: nmp ci
+            - run: npm run build
