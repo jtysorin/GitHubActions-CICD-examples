@@ -1,0 +1,11 @@
+name: Workflow run
+on: 
+    workflow_run:
+        workflows: [Using reusable workflow]
+        types: [completed]
+        branches: [master]
+jobs:
+    echo-output:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo DONE
