@@ -1,9 +1,9 @@
 name: Using reusable workflow
 on: 
     workflow_dispatch:
-    push:
-        branches:
-            - master
+    # push:
+    #     branches:
+    #         - master
 jobs:
     lint:
       runs-on: ubuntu-latest
