@@ -1,4 +1,4 @@
-name: Deployment
+name: Deployment to AWS S3 with custom action (JS Action)
 on:
   # push:
   #   branches:

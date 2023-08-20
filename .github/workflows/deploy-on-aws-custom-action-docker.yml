@@ -1,12 +1,9 @@
-name: Deployment to AWS S3 (OIDC)
+name: Deployment to AWS S3 with custom action (Docker Action)
 on:
-  push:
-    branches:
-      - master
+  # push:
+  #   branches:
+  #     - master
   workflow_dispatch: 
-env:
-  BUCKET_NAME: "practice-action"
-  AWS_REGION: "eu-central-1"
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -19,13 +16,10 @@ jobs:
         uses: jtysorin/practice-action/.github/actions/cached-deps@master
         with:
           caching: 'false'
-
       - name: Output information
         run: echo "Cache used? ${{ steps.cache-deps.outputs.used-cache }}"
-
       - name: Lint code
         run: npm run lint
-
   test:
     runs-on: ubuntu-latest
     steps:
@@ -34,18 +28,15 @@ jobs:
       - name: Load & cache dependencies
       # uses: ./.github/actions/cached-deps
         uses: jtysorin/practice-action/.github/actions/cached-deps@master
-
       - name: Test code
         id: run-tests
         run: npm run test
-
       - name: Upload test report
         if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: test.json
-
   build:
     needs: test
     runs-on: ubuntu-latest
@@ -55,53 +46,35 @@ jobs:
       - name: Load & cache dependencies
       # uses: ./.github/actions/cached-deps
         uses: jtysorin/practice-action/.github/actions/cached-deps@master
-
       - name: Build website
         run: npm run build
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: dist-files
           path: dist
-
   deploy:
     needs: build
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: read  # This is required for actions/checkout
     runs-on: ubuntu-latest
     steps:
       - name: Get code
         uses: actions/checkout@v3
-
       - name: Get build artifacts
         uses: actions/download-artifact@v3
         with:
           name: dist-files
           path: ./dist
-
       - name: Output contents
         run: ls
-
-      - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::722110802703:role/GitHub-Actions-demo-s3-1
-          aws-region: ${{ env.AWS_REGION }}
-
       - name: Deploy site
         id: deploy-to-s3
-        run: |
-          aws s3 sync ./dist s3://${{ env.BUCKET_NAME }} --region ${{ env.AWS_REGION }}
-          echo "website-url=http://${{ env.BUCKET_NAME }}.s3-website.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
-
-        # Or use JS Action
-        # uses: ./.github/actions/deploy-s3-javascript
-        # with:
-        #   bucket: ${{ env.BUCKET_NAME }}
-        #   dist-folder: ./dist
-
+        uses: ./.github/actions/deploy-s3-docker
+        env: 
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+          bucket: practice-action
+          dist-folder: ./dist
       - name: Output information
         run: |
           echo "Live URL: ${{ steps.deploy-to-s3.outputs.website-url }}"
