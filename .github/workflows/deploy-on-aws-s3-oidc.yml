@@ -94,7 +94,7 @@ jobs:
         id: deploy-to-s3
         run: |
           aws s3 sync ./dist s3://${{ env.BUCKET_NAME }} --region ${{ env.AWS_REGION }}
-          echo "website-url=http://${{ env.BUCKET_NAME }}.s3-website.${{ env.AWS_REGION }}.amazonaws.com >> $GITHUB_OUTPUT"
+          echo "website-url=http://${{ env.BUCKET_NAME }}.s3-website.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_OUTPUT
         # uses: ./.github/actions/deploy-s3-javascript
         # with:
         #   bucket: ${{ env.BUCKET_NAME }}
