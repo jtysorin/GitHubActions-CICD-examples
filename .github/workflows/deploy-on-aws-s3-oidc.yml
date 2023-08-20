@@ -58,7 +58,7 @@ jobs:
 
       - name: Build website
         run: npm run build
-        
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -90,11 +90,12 @@ jobs:
           role-to-assume: arn:aws:iam::722110802703:role/GitHub-Actions-demo-s3-1
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Deploy to AWS s3
+      - name: Deploy site
         id: deploy-to-s3
-        run: |
-          aws s3 cp ./dist s3://${{ env.BUCKET_NAME }}/
-          echo "website-url=http://${{ env.BUCKET_NAME }}.s3-website.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_OUTPUT"
+        uses: ./.github/actions/deploy-s3-javascript
+        with:
+          bucket: practice-action
+          dist-folder: ./dist
 
       - name: Output information
         run: |
