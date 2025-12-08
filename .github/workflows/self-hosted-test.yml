@@ -1,0 +1,26 @@
+name: Self-Hosted Echo Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: 'A message to echo'
+        required: true
+        default: 'Hello from the self-hosted runner!'
+        type: string
+
+jobs:
+  echo-on-self-hosted:
+    runs-on: [self-hosted]
+    
+    steps:
+      - name: Checkout repository (optional but good practice)
+        uses: actions/checkout@v5
+        
+      - name: Echo Input Message
+        run: |
+          echo "--- Workflow Start ---"
+          echo "Running on a runner tagged with 'self-hosted'."
+          echo "The message from the workflow dispatch input is:"
+          echo "${{ github.event.inputs.message }}"
+          echo "--- Workflow End ---"
